@@ -1,0 +1,2 @@
+sparse_framework~=1.2.0
+torch~=1.11.0

@@ -1,0 +1,8 @@
+.DOCKER
+
+__pycache__
+*.pyc
+
+*.whl
+
+*.swp
