@@ -24,3 +24,7 @@ class MemoryBuffer(SparseIOBuffer):
     def transferToHost(self, tensor):
         return tensor.to("cpu")
 
+    def dispatch_batch(self, lock):
+        features, callbacks, statistics_records = super().dispatch_batch(lock)
+
+        return torch.cat(features), callbacks, statistics_records
