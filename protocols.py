@@ -9,9 +9,7 @@ class InferenceClientProtocol(SparseProtocol):
     """Protocol for serving models over a TCP connection.
     """
     def __init__(self,
-                 data_source_id,
                  dataset,
-                 model_meta_data,
                  on_con_lost,
                  no_samples,
                  use_scheduling,
@@ -19,7 +17,6 @@ class InferenceClientProtocol(SparseProtocol):
                  stats_queue = None):
         super().__init__(stats_queue = stats_queue, request_statistics_factory = ClientRequestStatistics)
         self.dataloader = DataLoader(dataset, 1)
-        self.model_meta_data = model_meta_data
         self.on_con_lost = on_con_lost
         self.no_samples = no_samples
         self.target_latency = target_latency
@@ -36,9 +33,7 @@ class InferenceClientProtocol(SparseProtocol):
         self.no_samples -= 1
         features, labels = next(iter(self.dataloader))
         self.send_payload({ 'op': 'offload_task',
-                            'activation': features,
-                            'labels': labels,
-                            'model_meta_data': self.model_meta_data })
+                            'activation': features })
         self.current_record.request_sent()
 
     def payload_received(self, payload):
@@ -71,8 +66,6 @@ class InferenceServerProtocol(SparseProtocol):
 
         self.use_scheduling = use_scheduling
         self.use_batching = use_batching
-
-        self.model_meta_data = None
 
     def payload_received(self, payload):
         self.current_record = self.request_statistics.create_record(payload["op"])

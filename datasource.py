@@ -2,19 +2,16 @@ import asyncio
 from sparse_framework import SparseNode
 
 from datasets import get_dataset
-from model_meta_data import ModelMetaData
 from protocols import InferenceClientProtocol
 from utils import parse_arguments, _get_benchmark_log_file_prefix
 
 class InferenceClient(SparseNode):
     """A Node that iterates over a dataset and offloads the sample inference to specified server.
     """
-    def __init__(self, dataset, model_meta_data, no_samples, use_scheduling, target_latency, **kwargs):
+    def __init__(self, dataset, no_samples, use_scheduling, target_latency, **kwargs):
         super().__init__(**kwargs)
         self.protocol_factory = lambda on_con_lost, stats_queue: \
-                                        lambda: InferenceClientProtocol(self.node_id, \
-                                                                        dataset, \
-                                                                        model_meta_data, \
+                                        lambda: InferenceClientProtocol(dataset, \
                                                                         on_con_lost, \
                                                                         no_samples, \
                                                                         use_scheduling, \
@@ -41,7 +38,6 @@ async def run_datasources(args):
     dataset, classes = get_dataset(args.dataset)
     for i in range(args.no_datasources):
         datasource = InferenceClient(dataset,
-                                     ModelMetaData(model_id=str(i % args.no_models), model_name=args.model_name),
                                      int(args.no_samples),
                                      int(args.use_scheduling)==1,
                                      float(args.target_latency)/1000.0,
