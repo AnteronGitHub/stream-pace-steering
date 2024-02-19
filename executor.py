@@ -22,6 +22,12 @@ class TensorExecutor(TaskExecutor):
         self.logger.info(f"Serving inference for VGG using {self.device} (Batching: {self.use_batching}).")
         await super().start()
 
+    def buffer_input(self, input_data, result_callback, statistics_record):
+        batch_index = self.memory_buffer.buffer_input(input_data, result_callback, statistics_record, self.lock)
+        statistics_record.task_queued()
+        if not self.use_batching or batch_index == 0:
+            self.queue.put_nowait((self.memory_buffer.result_received))
+
     def execute_task(self, callback, lock):
         if self.use_batching:
             features, callbacks, statistics_records = self.memory_buffer.dispatch_batch(lock)
