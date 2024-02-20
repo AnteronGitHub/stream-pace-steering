@@ -19,6 +19,7 @@ class TensorExecutor(TaskExecutor):
 
     async def start(self):
         self.model = VGG_unsplit()
+        self.model = self.model.to(self.device)
         self.logger.info(f"Serving inference for VGG using {self.device} (Batching: {self.use_batching}).")
         await super().start()
 
