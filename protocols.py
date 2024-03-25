@@ -1,53 +1,58 @@
 import asyncio
 
-from torch.utils.data import DataLoader
-
 from sparse_framework import SparseProtocol
 from sparse_framework.stats import ServerRequestStatistics, ClientRequestStatistics
 
 class InferenceClientProtocol(SparseProtocol):
-    """Protocol for serving models over a TCP connection.
+    """Protocol for streaming data over a TCP connection.
     """
     def __init__(self,
-                 dataset,
                  on_con_lost,
-                 no_samples,
-                 use_scheduling,
-                 target_latency,
-                 stats_queue = None):
+                 stats_queue = None,
+                 stream_factory = None,
+                 sink_factory = None):
         super().__init__(stats_queue = stats_queue, request_statistics_factory = ClientRequestStatistics)
-        self.dataloader = DataLoader(dataset, 1)
         self.on_con_lost = on_con_lost
-        self.no_samples = no_samples
-        self.target_latency = target_latency
-        self.use_scheduling = use_scheduling
+
+        if stream_factory is not None:
+            self.stream = stream_factory(self)
+        if sink_factory is not None:
+            self.sink = sink_factory(self.logger)
 
     def connection_made(self, transport):
         super().connection_made(transport)
 
-        self.offload_task()
+        self.stream.emit()
 
-    def offload_task(self):
+    def send_payload(self, payload):
         self.current_record = self.request_statistics.create_record("offload_task")
         self.current_record.processing_started()
-        self.no_samples -= 1
-        features, labels = next(iter(self.dataloader))
-        self.send_payload({ 'op': 'offload_task',
-                            'activation': features })
+
+        payload['op'] = 'offload_task'
+
+        super().send_payload(payload)
+
         self.current_record.request_sent()
 
     def payload_received(self, payload):
         self.current_record.response_received()
         self.request_statistics.log_record(self.current_record)
-        offload_latency = self.request_statistics.get_offload_latency(self.current_record)
 
-        if (self.no_samples > 0):
-            if self.use_scheduling and 'sync' in payload.keys():
+        if self.sink is not None:
+            self.sink.tuple_received(payload)
+
+        if (self.stream.no_samples > 0):
+            offload_latency = self.request_statistics.get_offload_latency(self.current_record)
+
+            if self.stream.use_scheduling:
                 sync = payload['sync']
             else:
                 sync = 0.0
+
+            target_latency = self.stream.target_latency
+
             loop = asyncio.get_running_loop()
-            loop.call_later(self.target_latency-offload_latency + sync if self.target_latency > offload_latency else 0, self.offload_task)
+            loop.call_later(target_latency-offload_latency + sync if target_latency > offload_latency else 0, self.stream.emit)
         else:
             self.transport.close()
 
@@ -62,18 +67,17 @@ class InferenceServerProtocol(SparseProtocol):
                  stats_queue):
         super().__init__(stats_queue = stats_queue, request_statistics_factory = ServerRequestStatistics)
 
-        self.task_executor = task_executor
-
         self.use_scheduling = use_scheduling
         self.use_batching = use_batching
+        self.task_executor = task_executor
 
     def payload_received(self, payload):
         self.current_record = self.request_statistics.create_record(payload["op"])
         self.current_record.request_received()
 
-        self.task_executor.buffer_input(payload["activation"], self.forward_propagated, self.current_record)
+        self.task_executor.buffer_input(payload["activation"], self.send_payload, self.current_record)
 
-    def forward_propagated(self, result, batch_index = 0):
+    def send_payload(self, result, batch_index = 0):
         payload = { "pred": result }
         if self.use_scheduling:
             # Quantize queueing time to millisecond precision
@@ -86,9 +90,9 @@ class InferenceServerProtocol(SparseProtocol):
             sync_delay_ms = batch_index * task_latency_ms + queueing_time_ms % task_latency_ms
 
             self.current_record.set_sync_delay_ms(sync_delay_ms)
-            payload["sync"] =  sync_delay_ms / 1000.0
+            payload["sync"] = sync_delay_ms / 1000.0
 
-        self.send_payload(payload)
+        super().send_payload(payload)
 
         self.current_record.response_sent()
         self.request_statistics.log_record(self.current_record)

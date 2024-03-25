@@ -12,6 +12,10 @@ if __name__ == '__main__':
     use_batching = int(args.use_batching)==1
 
     executor_factory = lambda lock, queue: TensorExecutor(use_batching, lock, queue)
-    server_protocol_factory = lambda executor, stats_queue: lambda: InferenceServerProtocol(executor, use_scheduling, use_batching, stats_queue)
+    server_protocol_factory = lambda executor, stats_queue: \
+                                    lambda: InferenceServerProtocol(executor, \
+                                                                    use_scheduling, \
+                                                                    use_batching, \
+                                                                    stats_queue)
 
     asyncio.run(SparseNode(executor_factory=executor_factory, server_protocol_factory=server_protocol_factory).start())

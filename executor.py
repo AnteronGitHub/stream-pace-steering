@@ -2,8 +2,9 @@ import torch
 from time import time
 
 from sparse_framework import TaskExecutor
+
+from applications import SparseOperator
 from utils import get_device
-from vgg import VGG_unsplit
 from memory_buffer import MemoryBuffer
 
 __all__ = ["TensorExecutor"]
@@ -15,12 +16,11 @@ class TensorExecutor(TaskExecutor):
         self.use_batching = use_batching
         self.device = get_device()
         self.batch_no = 0
-        self.model = None
+        self.operator = SparseOperator()
 
-    async def start(self):
-        self.model = VGG_unsplit()
-        self.logger.info(f"Serving inference for VGG using {self.device} (Batching: {self.use_batching}).")
-        await super().start()
+    def set_operator(self, operator):
+        self.logger.info(f"Registered operator")
+        self.operator = operator
 
     def buffer_input(self, input_data, result_callback, statistics_record):
         batch_index = self.memory_buffer.buffer_input(input_data, result_callback, statistics_record, self.lock)
@@ -35,7 +35,7 @@ class TensorExecutor(TaskExecutor):
             features, callbacks, statistics_records = self.memory_buffer.pop_input(lock)
 
         task_started_at = time()
-        pred = self.model(features)
+        pred = self.operator.call(features)
         task_completed_at = time()
 
         for record in statistics_records:

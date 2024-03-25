@@ -3,6 +3,7 @@ import logging
 from sparse_framework import SparseNode
 
 from datasets import get_dataset
+from applications import SparseStream, SparseSink
 from protocols import InferenceClientProtocol
 from utils import parse_arguments
 
@@ -12,13 +13,13 @@ async def run_datasources(no_datasources, dataset, no_samples, use_scheduling, t
     tasks = []
     for i in range(no_datasources):
         node_id = str(i)
+        stream_factory = lambda protocol: SparseStream(protocol, no_samples, target_latency, use_scheduling, dataset)
+
         client_protocol_factory = lambda on_con_lost, stats_queue: \
-                                        lambda: InferenceClientProtocol(dataset, \
-                                                                        on_con_lost, \
-                                                                        no_samples, \
-                                                                        use_scheduling, \
-                                                                        target_latency, \
-                                                                        stats_queue=stats_queue)
+                                        lambda: InferenceClientProtocol(on_con_lost, \
+                                                                        stats_queue=stats_queue, \
+                                                                        stream_factory=stream_factory, \
+                                                                        sink_factory = SparseSink)
         client_protocol_callback = lambda result: logger.info(result)
         datasource = SparseNode(client_protocol_factory=client_protocol_factory,
                                 client_protocol_callback=client_protocol_callback,
