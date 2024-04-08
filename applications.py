@@ -20,8 +20,8 @@ class SparsePyTorchSink(SparseSink):
         self.logger.info("Result: {}".format(torch.argmax(new_tuple['pred'])))
 
 class SparsePyTorchOperator(SparseOperator):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.model = VGG_unsplit()
 
     def call(self, input_tuple):

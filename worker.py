@@ -11,4 +11,4 @@ if __name__ == '__main__':
     use_scheduling = int(args.use_scheduling)==1
     use_batching = int(args.use_batching)==1
 
-    asyncio.run(SparseNode(operator_factory=SparsePyTorchOperator).start())
+    asyncio.run(SparseNode().start(operator_factory=lambda: SparsePyTorchOperator(use_batching=use_batching)))
