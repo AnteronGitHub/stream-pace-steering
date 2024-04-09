@@ -17,7 +17,7 @@ class SparsePyTorchSource(SparseSource):
 
 class SparsePyTorchSink(SparseSink):
     def tuple_received(self, new_tuple):
-        self.logger.info("Result: {}".format(torch.argmax(new_tuple['pred'])))
+        self.logger.info("Result: {}".format(torch.argmax(new_tuple)))
 
 class SparsePyTorchOperator(SparseOperator):
     def __init__(self, *args, **kwargs):
