@@ -7,8 +7,8 @@ from torch.utils.data import DataLoader
 from vgg import VGG_unsplit
 
 class SparsePyTorchSource(SparseSource):
-    def __init__(self, dataset, *args):
-        super().__init__(*args)
+    def __init__(self, dataset, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.dataloader = DataLoader(dataset, 1)
 
     def get_tuple(self):
