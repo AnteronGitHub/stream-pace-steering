@@ -4,7 +4,7 @@ from sparse_framework import SparseSource, SparseSink, SparseOperator
 import torch
 from torch.utils.data import DataLoader
 
-from vgg import VGG_unsplit
+from .vgg import VGG_unsplit
 
 class SparsePyTorchSource(SparseSource):
     def __init__(self, dataset, *args, **kwargs):
