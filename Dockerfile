@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=pytorch/pytorch:1.11.0-cuda11.3-cudnn8-runtime
+ARG BASE_IMAGE=pytorch/pytorch:2.2.2-cuda12.1-cudnn8-runtime
 FROM $BASE_IMAGE
 
 ARG LIB_PATH=/usr/lib
