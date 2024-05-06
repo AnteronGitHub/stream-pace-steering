@@ -1,4 +1,4 @@
-from sparse_framework import SparseDeployer
+from sparse_framework import SparseNode
 
 if __name__ == "__main__":
     app = { "name": "sparseapp",
@@ -8,4 +8,4 @@ if __name__ == "__main__":
                 "SparsePyTorchArgMax": {"SparsePyTorchSink"}
                 }
             }
-    SparseDeployer(app).deploy()
+    SparseNode().deploy_app(app)
