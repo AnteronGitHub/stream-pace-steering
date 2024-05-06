@@ -4,7 +4,8 @@ if __name__ == "__main__":
     app = { "name": "sparseapp",
             "dag": {
                 "SparsePyTorchSource": {"SparsePyTorchOperator"},
-                "SparsePyTorchOperator": {"SparsePyTorchSink"}
+                "SparsePyTorchOperator": {"SparsePyTorchArgMax"},
+                "SparsePyTorchArgMax": {"SparsePyTorchSink"}
                 }
             }
     SparseDeployer(app).deploy()
