@@ -28,10 +28,8 @@ spec:
         imagePullPolicy: IfNotPresent
         workingDir: /app
         env:
-        - name: MASTER_UPSTREAM_HOST
-          value: "$SPARSE_DATASOURCE_DOWNSTREAM_HOST"
-        - name: MASTER_UPSTREAM_PORT
-          value: "$SPARSE_DATASOURCE_DOWNSTREAM_PORT"
+        - name: SPARSE_ROOT_SERVER_ADDRESS
+          value: "sparse-worker"
         command: ["python3", "__main__.py"]
         volumeMounts:
         - name: app-code

@@ -1,7 +1,7 @@
 from sparse_framework import SparseNode
 
 if __name__ == "__main__":
-    app = { "name": "sparseapp",
+    app = { "name": "stream_pace_steering",
             "dag": {
                 "SparsePyTorchSource": {"SparsePyTorchOperator"},
                 "SparsePyTorchOperator": {"SparsePyTorchArgMax"},
