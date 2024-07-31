@@ -29,7 +29,7 @@ spec:
         workingDir: /app
         env:
         - name: SPARSE_ROOT_SERVER_ADDRESS
-          value: "sparse-worker"
+          value: "sparse-root"
         command: ["python3", "__main__.py"]
         volumeMounts:
         - name: app-code
