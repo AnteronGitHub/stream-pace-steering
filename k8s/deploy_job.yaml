@@ -28,7 +28,7 @@ spec:
         imagePullPolicy: IfNotPresent
         workingDir: /app
         env:
-        - name: SPARSE_ROOT_SERVER_ADDRESS
+        - name: SPARSE_API_HOST
           value: "sparse-root"
         command: ["python3", "__main__.py"]
         volumeMounts:
