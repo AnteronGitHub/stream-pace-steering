@@ -1,7 +1,4 @@
-from .applications import SparsePyTorchSource, SparsePyTorchOperator, SparsePyTorchArgMax, SparsePyTorchSink
-
-def get_sources():
-    return [SparsePyTorchSource]
+from .applications import SparsePyTorchOperator, SparsePyTorchArgMax, SparsePyTorchSink
 
 def get_operators():
     return [SparsePyTorchOperator, SparsePyTorchArgMax]
