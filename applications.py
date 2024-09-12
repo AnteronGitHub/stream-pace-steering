@@ -1,21 +1,8 @@
-import logging
-
-from sparse_framework import SparseSource, SparseSink, SparseOperator
-
 import torch
-from torch.utils.data import DataLoader
-from torchvision import datasets
-from torchvision import transforms
+
+from sparse_framework import SparseOperator
 
 from .vgg import VGG_unsplit
-
-class SparsePyTorchSink(SparseSink):
-    def __init__(self):
-        super().__init__()
-        self.logger = logging.getLogger("SparsePyTorchSink")
-
-    def tuple_received(self, new_tuple):
-        self.logger.info("Result: {}".format(new_tuple))
 
 class SparsePyTorchOperator(SparseOperator):
     def __init__(self, *args, **kwargs):

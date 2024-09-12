@@ -6,8 +6,7 @@ if __name__ == "__main__":
     app = { "name": "stream_pace_steering",
             "dag": {
                 "SparsePyTorchSource": {"SparsePyTorchOperator"},
-                "SparsePyTorchOperator": {"SparsePyTorchArgMax"},
-                "SparsePyTorchArgMax": {"SparsePyTorchSink"}
+                "SparsePyTorchOperator": {"SparsePyTorchArgMax"}
                 }
             }
     api_host = os.environ.get('SPARSE_API_HOST') or '127.0.0.1'
