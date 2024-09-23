@@ -5,7 +5,7 @@ from sparse_framework import SparseAPIClient
 if __name__ == "__main__":
     app = { "name": "stream_pace_steering",
             "dag": {
-                "SparsePyTorchSource": {"SparsePyTorchOperator"},
+                "Cifar10Source": {"SparsePyTorchOperator"},
                 "SparsePyTorchOperator": {"SparsePyTorchArgMax"}
                 }
             }
