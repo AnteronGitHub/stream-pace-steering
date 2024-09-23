@@ -1,0 +1,46 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: splitnn-deployer
+  namespace: sparse
+  labels:
+    app: splitnn-deployer
+spec:
+  template:
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+            - matchExpressions:
+              - key: sparse/node
+                operator: In
+                values:
+                - aio
+              - key: kubernetes.io/arch
+                operator: In
+                values:
+                - "amd64"
+      containers:
+      - name: splitnn-datasource
+        image: anterondocker/sparse-framework:pytorch
+        imagePullPolicy: IfNotPresent
+        workingDir: /app
+        env:
+        - name: SPARSE_API_HOST
+          value: "sparse-root"
+        command: ["python3", "__main__.py"]
+        volumeMounts:
+        - name: app-code
+          mountPath: /app
+        - name: sparse-code
+          mountPath: /usr/lib/sparse_framework
+      restartPolicy: Never
+      volumes:
+      - name: app-code
+        hostPath:
+          path: /opt/stream-pace-steering
+      - name: sparse-code
+        hostPath:
+          path: /opt/sparse/sparse_framework
