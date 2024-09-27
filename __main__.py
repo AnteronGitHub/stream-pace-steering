@@ -3,10 +3,10 @@ import os
 from sparse_framework import SparseAPIClient
 
 if __name__ == "__main__":
-    app = { "name": "stream_pace_steering",
+    app = { "name": "VGGClassifier",
             "dag": {
-                "SparsePyTorchSource": {"SparsePyTorchOperator"},
-                "SparsePyTorchOperator": {"SparsePyTorchArgMax"}
+                "Cifar10Source": {"VGGClassifier"},
+                "VGGClassifier": {"ArgMax"}
                 }
             }
     api_host = os.environ.get('SPARSE_API_HOST') or '127.0.0.1'

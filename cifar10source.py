@@ -28,4 +28,4 @@ class SparsePyTorchSource(SparseSource):
 
 if __name__ == "__main__":
     endpoint_host = os.environ.get("SPARSE_API_HOST")
-    asyncio.run(SparsePyTorchSource().connect(endpoint_host))
+    asyncio.run(SparsePyTorchSource(stream_alias="Cifar10Source").connect(endpoint_host))

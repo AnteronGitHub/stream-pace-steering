@@ -4,15 +4,15 @@ from sparse_framework import SparseOperator
 
 from .vgg import VGG_unsplit
 
-class SparsePyTorchOperator(SparseOperator):
+class VGGClassifier(SparseOperator):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.model = VGG_unsplit()
+        self.model = VGG_unsplit(num_classes=10)
 
     def call(self, input_tuple):
         return self.model(input_tuple)
 
-class SparsePyTorchArgMax(SparseOperator):
+class ArgMax(SparseOperator):
     def __init__(self, *args, **kwargs):
         super().__init__(use_batching = False, *args, **kwargs)
 
