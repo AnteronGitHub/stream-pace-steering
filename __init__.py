@@ -1,7 +1,7 @@
-from .applications import SparsePyTorchOperator, SparsePyTorchArgMax
+from .applications import VGGClassifier, ArgMax
 
 def get_operators():
-    return [SparsePyTorchOperator, SparsePyTorchArgMax]
+    return [VGGClassifier, ArgMax]
 
 def get_sinks():
     return []

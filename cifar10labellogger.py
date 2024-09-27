@@ -4,15 +4,16 @@ import os
 
 from sparse_framework import SparseSink
 
-class SparsePyTorchSink(SparseSink):
+class Cifar10LabelLogger(SparseSink):
     def __init__(self):
         super().__init__()
-        self.logger = logging.getLogger("SparsePyTorchSink")
+        self.logger = logging.getLogger("Cifar10LabelLogger")
         logging.basicConfig(format='[%(asctime)s] %(name)s - %(levelname)s: %(message)s', level=logging.INFO)
+        self.classes = ('plane', 'car', 'bird', 'cat', 'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
 
     def tuple_received(self, new_tuple):
-        self.logger.info("Result: {}".format(new_tuple))
+        self.logger.info("Class: %s", self.classes[new_tuple])
 
 if __name__ == "__main__":
     endpoint_host = os.environ.get("SPARSE_API_HOST")
-    asyncio.run(SparsePyTorchSink().connect("SparsePyTorchArgMax", endpoint_host))
+    asyncio.run(Cifar10LabelLogger().connect("ArgMax", endpoint_host))
