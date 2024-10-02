@@ -3,6 +3,7 @@ import os
 from sparse_framework import SparseAPIClient
 
 if __name__ == "__main__":
+    module_name = "VGGClassifier"
     app = { "name": "VGGClassifier",
             "dag": {
                 "Cifar10Source": {"VGGClassifier"},
@@ -11,4 +12,7 @@ if __name__ == "__main__":
             }
     api_host = os.environ.get('SPARSE_API_HOST') or '127.0.0.1'
     api_port = os.environ.get('SPARSE_API_PORT') or 50006
-    SparseAPIClient(api_host, api_port).upload_app(app, app_dir='./sparse_module')
+    sparse_client = SparseAPIClient(api_host, api_port)
+
+    sparse_client.create_module(module_name, module_dir='./sparse_module')
+    sparse_client.create_deployment(app)
