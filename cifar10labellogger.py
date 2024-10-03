@@ -15,5 +15,4 @@ class Cifar10LabelLogger(SparseSink):
         self.logger.info("Class: %s", self.classes[new_tuple])
 
 if __name__ == "__main__":
-    endpoint_host = os.environ.get("SPARSE_API_HOST")
-    asyncio.run(Cifar10LabelLogger().connect("ArgMax", endpoint_host))
+    asyncio.run(Cifar10LabelLogger().connect("ArgMax", os.environ.get("SPARSE_API_HOST") or "127.0.0.1"))

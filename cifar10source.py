@@ -5,7 +5,7 @@ from sparse_framework import SparseSource
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
 
-class SparsePyTorchSource(SparseSource):
+class Cifar10Source(SparseSource):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.dataloader = DataLoader(datasets.CIFAR10(
@@ -27,5 +27,4 @@ class SparsePyTorchSource(SparseSource):
         return features
 
 if __name__ == "__main__":
-    endpoint_host = os.environ.get("SPARSE_API_HOST")
-    asyncio.run(SparsePyTorchSource(stream_alias="Cifar10Source").connect(endpoint_host))
+    asyncio.run(Cifar10Source("Cifar10Source").connect(os.environ.get("SPARSE_API_HOST") or "127.0.0.1"))
