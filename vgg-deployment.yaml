@@ -1,0 +1,7 @@
+---
+name: "VGGClassifier"
+dag:
+  Cifar10Source:
+    - "VGGClassifier"
+  VGGClassifier:
+    - "ArgMax"
