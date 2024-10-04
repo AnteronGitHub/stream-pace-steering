@@ -1,7 +1,10 @@
 ---
-name: "VGGClassifier"
-dag:
+name: VGGClassifier
+streams:
+  - Cifar10Source
+  - Cifar10Labels
+pipelines:
   Cifar10Source:
-    - "VGGClassifier"
-  VGGClassifier:
-    - "ArgMax"
+    VGGClassifier:
+      ArgMax:
+        - Cifar10Labels
