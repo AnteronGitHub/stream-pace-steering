@@ -14,5 +14,8 @@ class Cifar10LabelLogger(SparseSink):
     def tuple_received(self, new_tuple):
         self.logger.info("Class: %s", self.classes[new_tuple])
 
+async def start_sinks(host : str, no_sources = 10):
+    await asyncio.gather(*[Cifar10LabelLogger().connect(f"Cifar10Labels-{i}", host) for i in range(no_sources)])
+
 if __name__ == "__main__":
-    asyncio.run(Cifar10LabelLogger().connect("Cifar10Labels", os.environ.get("SPARSE_API_HOST") or "127.0.0.1"))
+    asyncio.run(start_sinks(os.environ.get("SPARSE_API_HOST") or "127.0.0.1"))

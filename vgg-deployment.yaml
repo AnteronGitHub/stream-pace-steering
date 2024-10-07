@@ -1,10 +1,64 @@
 ---
 name: VGGClassifier
 streams:
-  - Cifar10Source
-  - Cifar10Labels
+  - Cifar10Source-0
+  - Cifar10Source-1
+  - Cifar10Source-2
+  - Cifar10Source-3
+  - Cifar10Source-4
+  - Cifar10Source-5
+  - Cifar10Source-6
+  - Cifar10Source-7
+  - Cifar10Source-8
+  - Cifar10Source-9
+  - Cifar10Labels-0
+  - Cifar10Labels-1
+  - Cifar10Labels-2
+  - Cifar10Labels-3
+  - Cifar10Labels-4
+  - Cifar10Labels-5
+  - Cifar10Labels-6
+  - Cifar10Labels-7
+  - Cifar10Labels-8
+  - Cifar10Labels-9
 pipelines:
-  Cifar10Source:
+  Cifar10Source-0:
     VGGClassifier:
       ArgMax:
-        - Cifar10Labels
+        - Cifar10Labels-0
+  Cifar10Source-1:
+    VGGClassifier:
+      ArgMax:
+        - Cifar10Labels-1
+  Cifar10Source-2:
+    VGGClassifier:
+      ArgMax:
+        - Cifar10Labels-2
+  Cifar10Source-3:
+    VGGClassifier:
+      ArgMax:
+        - Cifar10Labels-3
+  Cifar10Source-4:
+    VGGClassifier:
+      ArgMax:
+        - Cifar10Labels-4
+  Cifar10Source-5:
+    VGGClassifier:
+      ArgMax:
+        - Cifar10Labels-5
+  Cifar10Source-6:
+    VGGClassifier:
+      ArgMax:
+        - Cifar10Labels-6
+  Cifar10Source-7:
+    VGGClassifier:
+      ArgMax:
+        - Cifar10Labels-7
+  Cifar10Source-8:
+    VGGClassifier:
+      ArgMax:
+        - Cifar10Labels-8
+  Cifar10Source-9:
+    VGGClassifier:
+      ArgMax:
+        - Cifar10Labels-9

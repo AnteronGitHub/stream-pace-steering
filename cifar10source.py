@@ -26,5 +26,9 @@ class Cifar10Source(SparseSource):
         features, labels = next(iter(self.dataloader))
         return features
 
+async def start_sources(host : str, no_sources = 10):
+    sources = [Cifar10Source(f"Cifar10Source-{i}") for i in range(no_sources)]
+    await asyncio.gather(*[source.connect(host) for source in sources])
+
 if __name__ == "__main__":
-    asyncio.run(Cifar10Source("Cifar10Source").connect(os.environ.get("SPARSE_API_HOST") or "127.0.0.1"))
+    asyncio.run(start_sources(os.environ.get("SPARSE_API_HOST") or "127.0.0.1"))
