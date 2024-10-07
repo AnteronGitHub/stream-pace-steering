@@ -1,10 +1,10 @@
 import torch
 
-from sparse_framework import SparseOperator
+from sparse_framework import StreamOperator
 
 from .vgg import VGG_unsplit
 
-class VGGClassifier(SparseOperator):
+class VGGClassifier(StreamOperator):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.model = VGG_unsplit(num_classes=10)
@@ -12,7 +12,7 @@ class VGGClassifier(SparseOperator):
     def call(self, input_tuple):
         return self.model(input_tuple)
 
-class ArgMax(SparseOperator):
+class ArgMax(StreamOperator):
     def __init__(self, *args, **kwargs):
         super().__init__(use_batching = False, *args, **kwargs)
 

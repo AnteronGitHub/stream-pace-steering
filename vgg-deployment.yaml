@@ -1,0 +1,10 @@
+---
+name: VGGClassifier
+streams:
+  - Cifar10Source
+  - Cifar10Labels
+pipelines:
+  Cifar10Source:
+    VGGClassifier:
+      ArgMax:
+        - Cifar10Labels
